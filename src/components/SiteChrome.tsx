@@ -71,8 +71,9 @@ export function Header() {
                 <nav className="mt-8 flex flex-col gap-1">
                   {NAV.map((n) => (
                     <Link
-                      key={n.to}
-                      to={n.to}
+                      key={n.path}
+                      to="/shop/$category"
+                      params={{ category: n.category }}
                       className="rounded-md px-3 py-3 text-base font-medium hover:bg-muted"
                     >
                       {n.label}
