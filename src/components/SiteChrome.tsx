@@ -166,10 +166,10 @@ export function Footer() {
         <div>
           <h4 className="mb-3 text-sm font-semibold uppercase tracking-wide">Shop</h4>
           <ul className="space-y-2 text-sm text-muted-foreground">
-            <li><Link to="/shop/dresses" className="hover:text-foreground">Dresses</Link></li>
-            <li><Link to="/shop/cosmetics" className="hover:text-foreground">Cosmetics</Link></li>
-            <li><Link to="/shop/new" className="hover:text-foreground">New Arrivals</Link></li>
-            <li><Link to="/shop/sale" className="hover:text-foreground">Sale</Link></li>
+            <li><Link to="/shop/$category" params={{ category: "dresses" }} className="hover:text-foreground">Dresses</Link></li>
+            <li><Link to="/shop/$category" params={{ category: "cosmetics" }} className="hover:text-foreground">Cosmetics</Link></li>
+            <li><Link to="/shop/$category" params={{ category: "new" }} className="hover:text-foreground">New Arrivals</Link></li>
+            <li><Link to="/shop/$category" params={{ category: "sale" }} className="hover:text-foreground">Sale</Link></li>
           </ul>
         </div>
         <div>
