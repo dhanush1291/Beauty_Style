@@ -1,6 +1,6 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { ShopListing } from "@/components/ShopListing";
-import { products, DRESS_SUBCATEGORIES, COSMETIC_SUBCATEGORIES } from "@/data/products";
+import { products, COSMETIC_SUBCATEGORIES } from "@/data/products";
 
 export const Route = createFileRoute("/shop/$category")({
   component: CategoryPage,
@@ -11,7 +11,6 @@ export const Route = createFileRoute("/shop/$category")({
   ),
   head: ({ params }) => {
     const titles: Record<string, string> = {
-      dresses: "Shop Dresses — Sai",
       cosmetics: "Shop Cosmetics — Sai",
       new: "New Arrivals — Sai",
       sale: "Sale — Sai",
@@ -19,7 +18,7 @@ export const Route = createFileRoute("/shop/$category")({
     return {
       meta: [
         { title: titles[params.category] ?? "Shop — Sai" },
-        { name: "description", content: `Shop ${params.category} at Sai — curated picks from trusted partners.` },
+        { name: "description", content: `Shop ${params.category} at Sai — curated beauty picks from trusted partners.` },
       ],
     };
   },
@@ -31,10 +30,6 @@ function CategoryPage() {
   let title = "";
   let source = products;
   switch (category) {
-    case "dresses":
-      title = "Dresses";
-      source = products.filter((p) => p.category === "dresses");
-      break;
     case "cosmetics":
       title = "Cosmetics";
       source = products.filter((p) => p.category === "cosmetics");
@@ -51,8 +46,7 @@ function CategoryPage() {
       throw notFound();
   }
 
-  const subs =
-    category === "dresses" ? DRESS_SUBCATEGORIES : category === "cosmetics" ? COSMETIC_SUBCATEGORIES : [];
+  const subs = category === "cosmetics" ? COSMETIC_SUBCATEGORIES : [];
 
   return (
     <>

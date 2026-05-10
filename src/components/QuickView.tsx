@@ -32,7 +32,7 @@ export function QuickView({ product, open, onOpenChange }: Props) {
         await navigator.clipboard.writeText(url);
         toast.success("Link copied");
       }
-    } catch {}
+    } catch { }
   };
 
   return (
@@ -70,9 +70,9 @@ export function QuickView({ product, open, onOpenChange }: Props) {
               <h2 className="font-serif text-2xl">{product.name}</h2>
               <Stars rating={product.rating} count={product.reviewCount} />
               <div className="flex items-baseline gap-2">
-                <span className="text-2xl font-semibold">${product.price}</span>
+                <span className="text-2xl font-semibold">₹{product.price}</span>
                 {product.originalPrice && (
-                  <span className="text-sm text-muted-foreground line-through">${product.originalPrice}</span>
+                  <span className="text-sm text-muted-foreground line-through">₹{product.originalPrice}</span>
                 )}
               </div>
               <p className="text-sm text-muted-foreground">{product.description}</p>

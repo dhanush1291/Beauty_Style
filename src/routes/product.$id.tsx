@@ -55,7 +55,7 @@ function ProductPage() {
         await navigator.clipboard.writeText(url);
         toast.success("Link copied");
       }
-    } catch {}
+    } catch { }
   };
 
   return (
@@ -95,9 +95,9 @@ function ProductPage() {
           <h1 className="font-serif text-3xl md:text-4xl">{product.name}</h1>
           <Stars rating={product.rating} count={product.reviewCount} />
           <div className="flex items-baseline gap-3">
-            <span className="text-3xl font-semibold">${product.price}</span>
+            <span className="text-3xl font-semibold">₹{product.price}</span>
             {product.originalPrice && (
-              <span className="text-base text-muted-foreground line-through">${product.originalPrice}</span>
+              <span className="text-base text-muted-foreground line-through">₹{product.originalPrice}</span>
             )}
           </div>
           <p className="text-base text-muted-foreground">{product.description}</p>
@@ -153,16 +153,14 @@ function ProductPage() {
           <Tabs defaultValue="details" className="mt-6">
             <TabsList>
               <TabsTrigger value="details">Details</TabsTrigger>
-              <TabsTrigger value="info">{product.category === "dresses" ? "Size guide" : "Ingredients"}</TabsTrigger>
+              <TabsTrigger value="info">Ingredients</TabsTrigger>
               <TabsTrigger value="reviews">Reviews</TabsTrigger>
             </TabsList>
             <TabsContent value="details" className="text-sm text-muted-foreground">
               {product.details ?? product.description}
             </TabsContent>
             <TabsContent value="info" className="text-sm text-muted-foreground">
-              {product.category === "dresses"
-                ? "Refer to the partner site for the most accurate size guide. Models typically wear size S unless otherwise noted."
-                : "Full ingredient lists are available on the partner product page."}
+              Full ingredient lists are available on the partner product page.
             </TabsContent>
             <TabsContent value="reviews" className="text-sm text-muted-foreground">
               <div className="space-y-4">

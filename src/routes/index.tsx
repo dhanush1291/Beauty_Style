@@ -10,8 +10,8 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Sai — Where Beauty Meets Style" },
-      { name: "description", content: "Curated dresses & cosmetics from trusted partners. Discover your perfect look." },
+      { title: "Sai — Your Premier Cosmetics Destination" },
+      { name: "description", content: "Curated cosmetics & beauty products from trusted partners. Discover your perfect beauty look." },
     ],
   }),
   component: Home,
@@ -20,8 +20,8 @@ export const Route = createFileRoute("/")({
 const SLIDES = [
   {
     eyebrow: "New Season",
-    title: "Where Beauty Meets Style",
-    subtitle: "Discover curated dresses & cosmetics from the world's most coveted brands.",
+    title: "Your Beauty, Elevated",
+    subtitle: "Discover curated cosmetics & skincare from the world's most coveted beauty brands.",
     cta: "Shop New Arrivals",
     category: "new",
     image: "https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?auto=format&fit=crop&w=1800&q=80",
@@ -36,11 +36,11 @@ const SLIDES = [
   },
   {
     eyebrow: "Up to 40% Off",
-    title: "The Sale, Reimagined",
-    subtitle: "Limited-edition pieces at prices you'll love.",
+    title: "Beauty Sale, Reimagined",
+    subtitle: "Limited-edition beauty pieces at prices you'll love.",
     cta: "Shop Sale",
     category: "sale",
-    image: "https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&w=1800&q=80",
+    image: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=1800&q=80",
   },
 ];
 
@@ -141,29 +141,21 @@ function Home() {
         </div>
       </section>
 
-      {/* Shop dresses */}
+      {/* Shop by Category */}
       <section className="mx-auto max-w-7xl px-6 py-12 lg:px-8">
         <div className="mb-8">
-          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-primary">Shop Dresses</p>
-          <h2 className="mt-2 font-serif text-3xl md:text-4xl">From day to night</h2>
-        </div>
-        <div className="grid gap-4 md:grid-cols-3">
-          <CategoryTile category="dresses" sub="evening" title="Evening" image="https://images.unsplash.com/photo-1571513722275-4b41940f54b8?auto=format&fit=crop&w=900&q=80" />
-          <CategoryTile category="dresses" sub="casual" title="Casual" image="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=900&q=80" />
-          <CategoryTile category="dresses" sub="party" title="Party" image="https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=900&q=80" />
-        </div>
-      </section>
-
-      {/* Shop cosmetics */}
-      <section className="mx-auto max-w-7xl px-6 py-12 lg:px-8">
-        <div className="mb-8">
-          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-primary">Shop Cosmetics</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-primary">Shop by Category</p>
           <h2 className="mt-2 font-serif text-3xl md:text-4xl">Beauty, curated</h2>
         </div>
         <div className="grid gap-4 md:grid-cols-3">
           <CategoryTile category="cosmetics" sub="lipsticks" title="Lipsticks" image="https://images.unsplash.com/photo-1599733589046-8a35aa39b3ac?auto=format&fit=crop&w=900&q=80" />
           <CategoryTile category="cosmetics" sub="eyeshadow" title="Eyeshadow" image="https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=900&q=80" />
           <CategoryTile category="cosmetics" sub="skincare" title="Skincare" image="https://images.unsplash.com/photo-1631730486572-226d1f595b68?auto=format&fit=crop&w=900&q=80" />
+        </div>
+        <div className="mt-4 grid gap-4 md:grid-cols-3">
+          <CategoryTile category="cosmetics" sub="foundation" title="Foundation" image="https://images.unsplash.com/photo-1571781926291-c477ebfd024b?auto=format&fit=crop&w=900&q=80" />
+          <CategoryTile category="cosmetics" sub="blush" title="Blush & Highlighter" image="https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?auto=format&fit=crop&w=900&q=80" />
+          <CategoryTile category="cosmetics" sub="tools" title="Makeup Tools" image="https://images.unsplash.com/photo-1503236823255-94609f598e71?auto=format&fit=crop&w=900&q=80" />
         </div>
       </section>
 
@@ -175,7 +167,7 @@ function Home() {
           </div>
           <div className="grid gap-8 md:grid-cols-3">
             {[
-              { icon: Sparkles, title: "Curated Selection", body: "Hand-picked pieces from brands we trust and love." },
+              { icon: Sparkles, title: "Curated Selection", body: "Hand-picked beauty products from brands we trust and love." },
               { icon: ShieldCheck, title: "Trusted Partners", body: "We only work with retailers known for quality and service." },
               { icon: Truck, title: "Best Prices", body: "We surface the deals so you don't have to chase them." },
             ].map((f) => (
@@ -211,7 +203,7 @@ function Home() {
       {/* Newsletter */}
       <section className="bg-gradient-hero py-24">
         <div className="mx-auto max-w-2xl px-6 text-center">
-          <h2 className="font-serif text-4xl md:text-5xl">Join the Sai Club</h2>
+          <h2 className="font-serif text-4xl md:text-5xl">Join the Sai Beauty Club</h2>
           <p className="mt-3 text-foreground/80">
             Sign up and get 10% off your first purchase, plus exclusive drops & beauty tips.
           </p>

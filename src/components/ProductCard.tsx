@@ -41,13 +41,12 @@ export function ProductCard({ product }: { product: Product }) {
             {product.badges?.map((b) => (
               <span
                 key={b}
-                className={`rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${
-                  b === "SALE"
+                className={`rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${b === "SALE"
                     ? "bg-primary text-primary-foreground"
                     : b === "NEW"
                       ? "bg-foreground text-background"
                       : "bg-secondary text-secondary-foreground"
-                }`}
+                  }`}
               >
                 {b}
               </span>
@@ -88,9 +87,9 @@ export function ProductCard({ product }: { product: Product }) {
           </Link>
           <Stars rating={product.rating} count={product.reviewCount} />
           <div className="flex items-baseline gap-2 pt-0.5">
-            <span className="text-sm font-semibold">${product.price}</span>
+            <span className="text-sm font-semibold">₹{product.price}</span>
             {onSale && (
-              <span className="text-xs text-muted-foreground line-through">${product.originalPrice}</span>
+              <span className="text-xs text-muted-foreground line-through">₹{product.originalPrice}</span>
             )}
           </div>
         </div>

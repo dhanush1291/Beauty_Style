@@ -1,4 +1,4 @@
-export type ProductCategory = "dresses" | "cosmetics";
+export type ProductCategory = "cosmetics";
 
 export interface Product {
   id: string;
@@ -22,15 +22,6 @@ export interface Product {
   newArrival?: boolean;
 }
 
-export const DRESS_SUBCATEGORIES = [
-  { slug: "evening", label: "Evening Dresses" },
-  { slug: "casual", label: "Casual Dresses" },
-  { slug: "formal", label: "Formal Wear" },
-  { slug: "party", label: "Party Dresses" },
-  { slug: "maxi", label: "Maxi Dresses" },
-  { slug: "mini", label: "Mini Dresses" },
-] as const;
-
 export const COSMETIC_SUBCATEGORIES = [
   { slug: "lipsticks", label: "Lipsticks & Lip Gloss" },
   { slug: "eyeshadow", label: "Eyeshadow Palettes" },
@@ -40,24 +31,6 @@ export const COSMETIC_SUBCATEGORIES = [
   { slug: "tools", label: "Makeup Tools" },
 ] as const;
 
-const img = (q: string, seed: number) =>
-  `https://images.unsplash.com/photo-${q}?auto=format&fit=crop&w=900&q=80&sat=-10&hue=${seed}`;
-
-// Curated photo IDs from Unsplash (fashion + beauty editorial)
-const D = [
-  "1566174053879-31528523f8ae",
-  "1539109136881-3be0616acf4b",
-  "1572804013309-59a88b7e92f1",
-  "1571513722275-4b41940f54b8",
-  "1515886657613-9f3515b0c78f",
-  "1469334031218-e382a71b716b",
-  "1581044777550-4cfa60707c03",
-  "1583846783214-7229a91b20ed",
-  "1495121605193-b116b5b09a9c",
-  "1496747611176-843222e1e57c",
-  "1502716119720-b23a93e5fe1b",
-  "1485968579580-b6d095142e6e",
-];
 const C = [
   "1522335789203-aaa83b4f4d11", // makeup flatlay
   "1599733589046-8a35aa39b3ac", // lipstick
@@ -79,112 +52,7 @@ const u = (id: string) =>
 let _id = 0;
 const nid = () => `p${++_id}`;
 
-export const products: Product[] = [
-  // DRESSES — evening
-  {
-    id: nid(), name: "Silk Slip Midi Dress", brand: "Maison Roux", category: "dresses",
-    subcategory: "evening", price: 189, originalPrice: 240,
-    images: [u(D[0]), u(D[1])], rating: 4.7, reviewCount: 218,
-    colors: ["#1a1a1a", "#c19a6b", "#8b1a3a"], sizes: ["XS","S","M","L","XL"],
-    description: "Floor-skimming silk slip with delicate spaghetti straps and a bias-cut silhouette.",
-    details: "100% mulberry silk. Dry clean only. Model wears size S.",
-    affiliateUrl: "https://example.com/partner/silk-slip-midi", partnerName: "Maison Roux",
-    badges: ["SALE"], trending: true,
-  },
-  {
-    id: nid(), name: "Velvet Wrap Gown", brand: "Étoile", category: "dresses",
-    subcategory: "evening", price: 320,
-    images: [u(D[2]), u(D[3])], rating: 4.8, reviewCount: 142,
-    colors: ["#3a0a2a", "#0f1a3a"], sizes: ["XS","S","M","L"],
-    description: "A draped velvet gown that hugs in all the right places.",
-    affiliateUrl: "https://example.com/partner/velvet-wrap", partnerName: "Étoile",
-    badges: ["NEW"], newArrival: true, trending: true,
-  },
-  // casual
-  {
-    id: nid(), name: "Linen Tea Dress", brand: "Solène", category: "dresses",
-    subcategory: "casual", price: 98,
-    images: [u(D[4]), u(D[5])], rating: 4.5, reviewCount: 312,
-    colors: ["#f5e6d3", "#e8b8b0"], sizes: ["XS","S","M","L","XL"],
-    description: "Breathable linen with hand-finished buttons. Perfect for slow afternoons.",
-    affiliateUrl: "https://example.com/partner/linen-tea", partnerName: "Solène",
-    trending: true,
-  },
-  {
-    id: nid(), name: "Cotton Poplin Sundress", brand: "Bloom & Co.", category: "dresses",
-    subcategory: "casual", price: 72, originalPrice: 110,
-    images: [u(D[6]), u(D[7])], rating: 4.4, reviewCount: 540,
-    colors: ["#ffd9d4", "#d4e7d2"], sizes: ["XS","S","M","L"],
-    description: "Tiered poplin with cinched waist — your new weekend uniform.",
-    affiliateUrl: "https://example.com/partner/poplin-sun", partnerName: "Bloom & Co.",
-    badges: ["SALE", "BESTSELLER"],
-  },
-  // formal
-  {
-    id: nid(), name: "Tailored Sheath Dress", brand: "Ivoire", category: "dresses",
-    subcategory: "formal", price: 215,
-    images: [u(D[8]), u(D[0])], rating: 4.6, reviewCount: 96,
-    colors: ["#000000", "#2a2a40"], sizes: ["XS","S","M","L"],
-    description: "Crisp wool-blend sheath with a hidden back zip — boardroom to dinner.",
-    affiliateUrl: "https://example.com/partner/sheath", partnerName: "Ivoire",
-  },
-  // party
-  {
-    id: nid(), name: "Sequin Mini Dress", brand: "Glow Atelier", category: "dresses",
-    subcategory: "party", price: 158, originalPrice: 220,
-    images: [u(D[9]), u(D[10])], rating: 4.7, reviewCount: 401,
-    colors: ["#d4af37", "#b76e79", "#1a1a1a"], sizes: ["XS","S","M","L"],
-    description: "All-over sequins on a stretch base. Made for a night out.",
-    affiliateUrl: "https://example.com/partner/sequin-mini", partnerName: "Glow Atelier",
-    badges: ["SALE"], trending: true,
-  },
-  {
-    id: nid(), name: "Satin Cowl-Neck Dress", brand: "Lune", category: "dresses",
-    subcategory: "party", price: 134,
-    images: [u(D[11]), u(D[2])], rating: 4.5, reviewCount: 188,
-    colors: ["#b76e79", "#2a2a40", "#f5e6d3"], sizes: ["XS","S","M","L","XL"],
-    description: "Liquid satin with a draped cowl neckline.",
-    affiliateUrl: "https://example.com/partner/cowl-satin", partnerName: "Lune",
-    badges: ["NEW"], newArrival: true,
-  },
-  // maxi
-  {
-    id: nid(), name: "Floral Maxi Dress", brand: "Solène", category: "dresses",
-    subcategory: "maxi", price: 128,
-    images: [u(D[3]), u(D[5])], rating: 4.6, reviewCount: 274,
-    colors: ["#ffd9d4"], sizes: ["XS","S","M","L"],
-    description: "Hand-painted floral print on flowing chiffon.",
-    affiliateUrl: "https://example.com/partner/floral-maxi", partnerName: "Solène",
-    newArrival: true,
-  },
-  {
-    id: nid(), name: "Pleated Halter Maxi", brand: "Étoile", category: "dresses",
-    subcategory: "maxi", price: 168,
-    images: [u(D[6]), u(D[8])], rating: 4.7, reviewCount: 132,
-    colors: ["#c19a6b", "#000000"], sizes: ["XS","S","M","L"],
-    description: "Architectural pleats with an open back.",
-    affiliateUrl: "https://example.com/partner/halter-maxi", partnerName: "Étoile",
-  },
-  // mini
-  {
-    id: nid(), name: "Tweed Mini Dress", brand: "Maison Roux", category: "dresses",
-    subcategory: "mini", price: 145, originalPrice: 198,
-    images: [u(D[7]), u(D[9])], rating: 4.4, reviewCount: 89,
-    colors: ["#f5e6d3", "#ffd9d4"], sizes: ["XS","S","M","L"],
-    description: "Classic tweed reimagined with a mini hemline and pearl buttons.",
-    affiliateUrl: "https://example.com/partner/tweed-mini", partnerName: "Maison Roux",
-    badges: ["SALE"],
-  },
-  {
-    id: nid(), name: "Bodycon Knit Mini", brand: "Lune", category: "dresses",
-    subcategory: "mini", price: 89,
-    images: [u(D[10]), u(D[11])], rating: 4.3, reviewCount: 410,
-    colors: ["#000000", "#b76e79", "#f5e6d3"], sizes: ["XS","S","M","L"],
-    description: "Second-skin ribbed knit with long sleeves.",
-    affiliateUrl: "https://example.com/partner/knit-mini", partnerName: "Lune",
-    trending: true,
-  },
-
+export const defaultProducts: Product[] = [
   // COSMETICS — lipsticks
   {
     id: nid(), name: "Velvet Matte Lipstick", brand: "Sai Beauty", category: "cosmetics",
@@ -293,6 +161,38 @@ export const products: Product[] = [
   },
 ];
 
+// ─── localStorage-backed product store ───────────────────────────────────────
+const STORAGE_KEY = "sai_products";
+
+function loadProducts(): Product[] {
+  if (typeof window === "undefined") return defaultProducts;
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw) as Product[];
+      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+    }
+  } catch {}
+  return defaultProducts;
+}
+
+export function saveProducts(ps: Product[]) {
+  if (typeof window === "undefined") return;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(ps));
+  // Update in-memory reference
+  products.length = 0;
+  products.push(...ps);
+}
+
+export function resetProducts() {
+  if (typeof window === "undefined") return;
+  localStorage.removeItem(STORAGE_KEY);
+  products.length = 0;
+  products.push(...defaultProducts);
+}
+
+export const products: Product[] = loadProducts();
+
 export const allBrands = Array.from(new Set(products.map(p => p.brand))).sort();
 
 export const getProduct = (id: string) => products.find(p => p.id === id);
@@ -300,6 +200,5 @@ export const getRelated = (p: Product, n = 4) =>
   products.filter(x => x.id !== p.id && x.subcategory === p.subcategory).slice(0, n);
 
 export const subcategoryLabel = (slug: string) => {
-  const all = [...DRESS_SUBCATEGORIES, ...COSMETIC_SUBCATEGORIES];
-  return all.find(s => s.slug === slug)?.label ?? slug;
+  return COSMETIC_SUBCATEGORIES.find(s => s.slug === slug)?.label ?? slug;
 };

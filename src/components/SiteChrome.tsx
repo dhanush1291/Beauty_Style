@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Heart, Menu, Search, X } from "lucide-react";
+import { Heart, Menu, Search, X, Settings } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Logo } from "./Logo";
 import { Button } from "./ui/button";
@@ -17,7 +17,6 @@ import {
 import { useNavigate } from "@tanstack/react-router";
 
 const NAV = [
-  { category: "dresses", path: "/shop/dresses", label: "Dresses" },
   { category: "cosmetics", path: "/shop/cosmetics", label: "Cosmetics" },
   { category: "new", path: "/shop/new", label: "New Arrivals" },
   { category: "sale", path: "/shop/sale", label: "Sale" },
@@ -51,9 +50,8 @@ export function Header() {
 
   return (
     <header
-      className={`sticky top-0 z-40 w-full border-b transition-colors ${
-        scrolled ? "bg-background/85 backdrop-blur-md border-border" : "bg-background border-transparent"
-      }`}
+      className={`sticky top-0 z-40 w-full border-b transition-colors ${scrolled ? "bg-background/85 backdrop-blur-md border-border" : "bg-background border-transparent"
+        }`}
     >
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Mobile menu */}
@@ -85,6 +83,10 @@ export function Header() {
                   <Link to="/contact" className="rounded-md px-3 py-3 text-base hover:bg-muted">
                     Contact
                   </Link>
+                  <Link to="/admin" className="rounded-md px-3 py-3 text-base hover:bg-muted text-primary">
+                    <Settings className="mr-2 inline h-4 w-4" />
+                    Admin Panel
+                  </Link>
                 </nav>
               </div>
             </SheetContent>
@@ -101,9 +103,8 @@ export function Header() {
                 key={n.path}
                 to="/shop/$category"
                 params={{ category: n.category }}
-                className={`text-sm font-medium tracking-wide uppercase transition-colors hover:text-primary ${
-                  active ? "text-primary" : "text-foreground/80"
-                }`}
+                className={`text-sm font-medium tracking-wide uppercase transition-colors hover:text-primary ${active ? "text-primary" : "text-foreground/80"
+                  }`}
               >
                 {n.label}
               </Link>
@@ -124,6 +125,11 @@ export function Header() {
                 {ids.length}
               </span>
             )}
+          </Link>
+          <Link to="/admin" className="hidden lg:inline-flex">
+            <Button variant="ghost" size="icon" aria-label="Admin Panel">
+              <Settings className="h-5 w-5" />
+            </Button>
           </Link>
         </div>
       </div>
@@ -160,14 +166,13 @@ export function Footer() {
         <div className="col-span-2">
           <Logo />
           <p className="mt-3 max-w-xs text-sm text-muted-foreground">
-            Curated dresses & cosmetics from trusted partners. Where beauty meets style.
+            Curated cosmetics & beauty products from trusted partners. Your premier beauty destination.
           </p>
         </div>
         <div>
           <h4 className="mb-3 text-sm font-semibold uppercase tracking-wide">Shop</h4>
           <ul className="space-y-2 text-sm text-muted-foreground">
-            <li><Link to="/shop/$category" params={{ category: "dresses" }} className="hover:text-foreground">Dresses</Link></li>
-            <li><Link to="/shop/$category" params={{ category: "cosmetics" }} className="hover:text-foreground">Cosmetics</Link></li>
+            <li><Link to="/shop/$category" params={{ category: "cosmetics" }} className="hover:text-foreground">All Cosmetics</Link></li>
             <li><Link to="/shop/$category" params={{ category: "new" }} className="hover:text-foreground">New Arrivals</Link></li>
             <li><Link to="/shop/$category" params={{ category: "sale" }} className="hover:text-foreground">Sale</Link></li>
           </ul>

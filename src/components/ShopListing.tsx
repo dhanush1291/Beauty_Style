@@ -58,8 +58,8 @@ export function ShopListing({ title, description, crumbs, source }: Props) {
           step={5}
         />
         <div className="mt-2 flex justify-between text-xs text-muted-foreground">
-          <span>${price[0]}</span>
-          <span>${price[1]}</span>
+          <span>₹{price[0]}</span>
+          <span>₹{price[1]}</span>
         </div>
       </div>
       <div>
