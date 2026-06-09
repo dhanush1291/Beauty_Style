@@ -1,16 +1,17 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { ChevronRight, Sparkles, ShieldCheck, Truck } from "lucide-react";
+import { ChevronRight, Sparkles, ShieldCheck, Truck, ArrowRight } from "lucide-react";
 import { ProductCard } from "@/components/ProductCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
+import { useProducts } from "@/hooks/useProducts";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "INFINA — Your Premier Cosmetics Destination" },
-      { name: "description", content: "Curated cosmetics & beauty products from trusted partners. Discover your perfect beauty look at INFINA." },
+      { title: "INFINA — Premium Cosmetics & Skincare" },
+      { name: "description", content: "Curated cosmetics & beauty products. Discover your perfect beauty look at INFINA." },
     ],
   }),
   component: Home,
@@ -18,70 +19,64 @@ export const Route = createFileRoute("/")({
 
 const SLIDES = [
   {
-    eyebrow: "New Season",
-    title: "Your Beauty, Elevated",
-    subtitle: "Discover curated cosmetics & skincare from the world's most coveted beauty brands.",
-    cta: "Shop New Arrivals",
-    category: "new",
-    image: "https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?auto=format&fit=crop&w=1800&q=80",
-  },
-  {
-    eyebrow: "Editor's Pick",
-    title: "Soft. Glowing. Effortless.",
-    subtitle: "Skin-first beauty that lets you shine through.",
-    cta: "Explore Cosmetics",
+    eyebrow: "New Collection",
+    title: "Glow Like Never Before",
+    subtitle: "High-performance skincare meets luxury cosmetics. Curated for the modern beauty enthusiast.",
+    cta: "Shop The Collection",
     category: "cosmetics",
-    image: "https://images.unsplash.com/photo-1522335789203-aaa83b4f4d11?auto=format&fit=crop&w=1800&q=80",
+    image: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=1800&q=80",
   },
   {
-    eyebrow: "Up to 40% Off",
-    title: "Beauty Sale, Reimagined",
-    subtitle: "Limited-edition beauty pieces at prices you'll love.",
-    cta: "Shop Sale",
-    category: "sale",
-    image: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=1800&q=80",
+    eyebrow: "Summer Essentials",
+    title: "Your Daily Ritual",
+    subtitle: "Experience the ultimate hydration and finish with our best-selling summer picks.",
+    cta: "Shop Best Sellers",
+    category: "new",
+    image: "https://images.unsplash.com/photo-1522335789203-aaa83b4f4d11?auto=format&fit=crop&w=1800&q=80",
   },
 ];
 
 function Hero() {
   const [i, setI] = useState(0);
   useEffect(() => {
-    const t = setInterval(() => setI((v) => (v + 1) % SLIDES.length), 6000);
+    const t = setInterval(() => setI((v) => (v + 1) % SLIDES.length), 8000);
     return () => clearInterval(t);
   }, []);
 
   return (
-    <section className="relative h-[78vh] min-h-[520px] w-full overflow-hidden bg-muted">
+    <section className="relative h-[90vh] min-h-[600px] w-full overflow-hidden bg-[#fafafa]">
       {SLIDES.map((s, idx) => (
         <div
           key={s.title}
           className={`absolute inset-0 transition-opacity duration-1000 ${idx === i ? "opacity-100" : "opacity-0"}`}
         >
-          <img src={s.image} alt="" className="h-full w-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-r from-background/70 via-background/30 to-transparent" />
+          <img src={s.image} alt="" className="h-full w-full object-cover object-center lg:object-[center_30%]" />
         </div>
       ))}
       <div className="relative z-10 mx-auto flex h-full max-w-7xl items-center px-6 lg:px-8">
-        <div className="max-w-xl animate-fade-in" key={i}>
-          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-primary">{SLIDES[i].eyebrow}</p>
-          <h1 className="mt-4 font-serif text-5xl leading-[1.05] text-balance md:text-6xl lg:text-7xl">
+        <div className="max-w-md animate-fade-in" key={i}>
+          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-foreground/60">{SLIDES[i].eyebrow}</p>
+          <h1 className="mt-4 font-serif text-5xl leading-[1] tracking-tight md:text-7xl uppercase text-[#a37c7c]">
             {SLIDES[i].title}
           </h1>
-          <p className="mt-5 max-w-md text-base text-foreground/80 md:text-lg">{SLIDES[i].subtitle}</p>
-          <Button asChild size="lg" className="mt-8 px-8">
-            <Link to="/shop/$category" params={{ category: SLIDES[i].category }}>
-              {SLIDES[i].cta} <ChevronRight className="ml-1 h-4 w-4" />
-            </Link>
-          </Button>
+          <p className="mt-8 text-lg font-light leading-relaxed text-foreground/80 lowercase">
+            {SLIDES[i].subtitle}
+          </p>
+          <div className="mt-10">
+            <Button asChild size="lg" className="h-12 px-10 text-xs uppercase tracking-[0.2em] bg-white text-black border shadow-sm hover:bg-white/90 transition-all rounded-none">
+              <Link to="/shop/$category" params={{ category: SLIDES[i].category }}>
+                shop now
+              </Link>
+            </Button>
+          </div>
         </div>
       </div>
-      <div className="absolute bottom-6 left-1/2 z-10 flex -translate-x-1/2 gap-2">
+      <div className="absolute bottom-8 left-1/2 z-10 flex -translate-x-1/2 gap-3">
         {SLIDES.map((_, idx) => (
           <button
             key={idx}
             onClick={() => setI(idx)}
-            aria-label={`Slide ${idx + 1}`}
-            className={`h-1.5 rounded-full transition-all ${idx === i ? "w-8 bg-primary" : "w-4 bg-foreground/30"}`}
+            className={`h-1 transition-all ${idx === i ? "w-8 bg-primary" : "w-4 bg-foreground/20"}`}
           />
         ))}
       </div>
@@ -89,32 +84,23 @@ function Hero() {
   );
 }
 
-function CategoryTile({ category, sub, title, image }: { category: string; sub?: string; title: string; image: string }) {
-  const inner = (
-    <>
-      <img
-        src={image}
-        alt={title}
-        className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-      />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-      <div className="absolute inset-x-0 bottom-0 p-6">
-        <h3 className="font-serif text-2xl text-white md:text-3xl">{title}</h3>
-        <span className="mt-1 inline-flex items-center text-sm text-white/90">
-          Shop now <ChevronRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" />
-        </span>
+function CategoryCircle({ category, sub, title, image }: { category: string; sub: string; title: string; image: string }) {
+  return (
+    <Link
+      to="/shop/$category/$sub"
+      params={{ category, sub }}
+      className="group flex flex-col items-center gap-4 text-center"
+    >
+      <div className="relative h-40 w-40 overflow-hidden rounded-full border border-border shadow-soft transition-transform duration-500 group-hover:scale-105 md:h-56 md:w-56">
+        <img src={image} alt={title} className="h-full w-full object-cover" />
       </div>
-    </>
-  );
-  const cls = "group relative block aspect-[4/5] overflow-hidden rounded-lg bg-muted";
-  return sub ? (
-    <Link to="/shop/$category/$sub" params={{ category, sub }} className={cls}>{inner}</Link>
-  ) : (
-    <Link to="/shop/$category" params={{ category }} className={cls}>{inner}</Link>
+      <div>
+        <h3 className="font-serif text-xl tracking-tight text-foreground">{title}</h3>
+        <span className="text-xs uppercase tracking-widest text-muted-foreground transition-colors group-hover:text-primary">Shop Now</span>
+      </div>
+    </Link>
   );
 }
-
-import { useProducts } from "@/hooks/useProducts";
 
 function Home() {
   const { products: allProducts, isLoading } = useProducts();
@@ -128,112 +114,125 @@ function Home() {
   }
 
   const trending = allProducts.filter((p) => p.trending).slice(0, 8);
-  const newArrivals = allProducts.filter((p) => p.newArrival);
+  const collections = [
+    { sub: "lipsticks", title: "LIPS", image: "https://images.unsplash.com/photo-1599733589046-8a35aa39b3ac?auto=format&fit=crop&w=600&q=80" },
+    { sub: "eyeshadow", title: "EYES", image: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=600&q=80" },
+    { sub: "skincare", title: "SKIN", image: "https://images.unsplash.com/photo-1631730486572-226d1f595b68?auto=format&fit=crop&w=600&q=80" },
+    { sub: "blush", title: "FACE", image: "https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?auto=format&fit=crop&w=600&q=80" },
+  ];
 
   return (
-    <>
+    <div className="bg-background">
       <Hero />
 
-      {/* Trending */}
-      <section className="mx-auto max-w-7xl px-6 py-20 lg:px-8">
-        <div className="mb-10 flex items-end justify-between">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.25em] text-primary">Trending Now</p>
-            <h2 className="mt-2 font-serif text-3xl md:text-4xl">Loved by everyone</h2>
-          </div>
-          <Link to="/shop/$category" params={{ category: "new" }} className="hidden text-sm text-primary hover:underline md:inline">
-            View all →
-          </Link>
+      {/* Shop By Collection - Circular style like Kylie */}
+      <section className="mx-auto max-w-7xl px-6 py-24 lg:px-8">
+        <div className="mb-16 text-center">
+          <h2 className="font-serif text-4xl tracking-tight md:text-5xl uppercase">Shop By Category</h2>
+          <div className="mx-auto mt-4 h-0.5 w-24 bg-primary" />
         </div>
-        <div className="grid grid-cols-2 gap-x-4 gap-y-10 md:grid-cols-3 lg:grid-cols-4">
-          {trending.map((p) => (
-            <ProductCard key={p.id} product={p} />
+        <div className="flex flex-wrap justify-center gap-8 md:gap-16">
+          {collections.map((cat) => (
+            <CategoryCircle
+              key={cat.sub}
+              category="cosmetics"
+              sub={cat.sub}
+              title={cat.title}
+              image={cat.image}
+            />
           ))}
         </div>
       </section>
 
-      {/* Shop by Category */}
-      <section className="mx-auto max-w-7xl px-6 py-12 lg:px-8">
-        <div className="mb-8">
-          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-primary">Shop by Category</p>
-          <h2 className="mt-2 font-serif text-3xl md:text-4xl">Beauty, curated</h2>
-        </div>
-        <div className="grid gap-4 md:grid-cols-3">
-          <CategoryTile category="cosmetics" sub="lipsticks" title="Lipsticks" image="https://images.unsplash.com/photo-1599733589046-8a35aa39b3ac?auto=format&fit=crop&w=900&q=80" />
-          <CategoryTile category="cosmetics" sub="eyeshadow" title="Eyeshadow" image="https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=900&q=80" />
-          <CategoryTile category="cosmetics" sub="skincare" title="Skincare" image="https://images.unsplash.com/photo-1631730486572-226d1f595b68?auto=format&fit=crop&w=900&q=80" />
-        </div>
-        <div className="mt-4 grid gap-4 md:grid-cols-3">
-          <CategoryTile category="cosmetics" sub="foundation" title="Foundation" image="https://images.unsplash.com/photo-1571781926291-c477ebfd024b?auto=format&fit=crop&w=900&q=80" />
-          <CategoryTile category="cosmetics" sub="blush" title="Blush & Highlighter" image="https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?auto=format&fit=crop&w=900&q=80" />
-          <CategoryTile category="cosmetics" sub="tools" title="Makeup Tools" image="https://images.unsplash.com/photo-1503236823255-94609f598e71?auto=format&fit=crop&w=900&q=80" />
+      {/* Best Sellers Grid */}
+      <section className="border-t bg-muted/20 py-24">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="mb-16 flex flex-col items-center justify-between gap-4 md:flex-row md:items-end">
+            <div className="text-center md:text-left">
+              <p className="text-sm font-medium uppercase tracking-[0.3em] text-primary">Fan Favorites</p>
+              <h2 className="mt-2 font-serif text-4xl tracking-tight md:text-5xl">Best Sellers</h2>
+            </div>
+            <Link to="/shop/$category" params={{ category: "cosmetics" }} className="group flex items-center text-sm font-medium uppercase tracking-widest hover:text-primary transition-colors">
+              View All Products <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+            </Link>
+          </div>
+          <div className="grid grid-cols-2 gap-x-4 gap-y-12 md:grid-cols-3 lg:grid-cols-4">
+            {trending.map((p) => (
+              <ProductCard key={p.id} product={p} />
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* Why shop */}
-      <section className="bg-muted/40 py-20">
+      {/* Full Width Callout */}
+      <section className="relative h-[60vh] min-h-[400px] w-full overflow-hidden">
+        <img
+          src="https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?auto=format&fit=crop&w=1800&q=80"
+          alt=""
+          className="h-full w-full object-cover"
+        />
+        <div className="absolute inset-0 bg-black/20" />
+        <div className="absolute inset-0 flex flex-col items-center justify-center px-6 text-center">
+          <h2 className="max-w-2xl font-serif text-4xl text-white md:text-6xl uppercase tracking-tight">The Perfect Glow Starts Here</h2>
+          <Button asChild size="lg" className="mt-8 h-14 px-12 text-base uppercase tracking-widest bg-white text-black hover:bg-white/90 rounded-none border-none">
+            <Link to="/shop/$category" params={{ category: "cosmetics" }}>Shop Skincare</Link>
+          </Button>
+        </div>
+      </section>
+
+      {/* Features - Minimalist */}
+      <section className="py-24">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="mb-12 text-center">
-            <h2 className="font-serif text-3xl md:text-4xl">Why shop with INFINA</h2>
-          </div>
-          <div className="grid gap-8 md:grid-cols-3">
+          <div className="grid gap-12 md:grid-cols-3">
             {[
-              { icon: Sparkles, title: "Curated Selection", body: "Hand-picked beauty products from brands we trust and love." },
-              { icon: ShieldCheck, title: "Trusted Partners", body: "We only work with retailers known for quality and service." },
-              { icon: Truck, title: "Best Prices", body: "We surface the deals so you don't have to chase them." },
+              { icon: Sparkles, title: "Clean Formula", body: "Cruelty-free, vegan-friendly, and dermatologist tested for all skin types." },
+              { icon: ShieldCheck, title: "Trusted Luxury", body: "Premium ingredients curated for long-lasting performance." },
+              { icon: Truck, title: "Fast Shipping", body: "Direct and secure delivery to your doorstep with premium packaging." },
             ].map((f) => (
-              <div key={f.title} className="rounded-2xl bg-background p-8 text-center shadow-soft">
-                <div className="mx-auto mb-4 grid h-12 w-12 place-items-center rounded-full bg-primary/10 text-primary">
-                  <f.icon className="h-5 w-5" />
+              <div key={f.title} className="flex flex-col items-center text-center">
+                <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
+                  <f.icon className="h-6 w-6" />
                 </div>
-                <h3 className="font-serif text-xl">{f.title}</h3>
-                <p className="mt-2 text-sm text-muted-foreground">{f.body}</p>
+                <h3 className="font-serif text-2xl tracking-tight">{f.title}</h3>
+                <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted-foreground">
+                  {f.body}
+                </p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* New arrivals carousel */}
-      <section className="mx-auto max-w-7xl px-6 py-20 lg:px-8">
-        <div className="mb-8 flex items-end justify-between">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.25em] text-primary">Just In</p>
-            <h2 className="mt-2 font-serif text-3xl md:text-4xl">New arrivals</h2>
-          </div>
-        </div>
-        <div className="no-scrollbar -mx-6 flex gap-5 overflow-x-auto px-6 pb-2 lg:-mx-8 lg:px-8">
-          {newArrivals.map((p) => (
-            <div key={p.id} className="w-[260px] flex-none">
-              <ProductCard product={p} />
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Newsletter */}
-      <section className="bg-gradient-hero py-24">
+      {/* Newsletter - Signature Pink */}
+      <section className="bg-primary py-32">
         <div className="mx-auto max-w-2xl px-6 text-center">
-          <h2 className="font-serif text-4xl md:text-5xl">Join the INFINA Beauty Club</h2>
-          <p className="mt-3 text-foreground/80">
-            Sign up and get 10% off your first purchase, plus exclusive drops & beauty tips.
+          <h2 className="font-serif text-4xl tracking-tight md:text-5xl uppercase">Join The Club</h2>
+          <p className="mt-6 text-lg text-primary-foreground/90 font-light">
+            Sign up for exclusive access to new drops, beauty tips and get 15% off your first order.
           </p>
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              toast.success("Welcome to INFINA! Check your inbox for your 10% off code.");
+              toast.success("Welcome! Check your inbox for your 15% off code.");
               (e.currentTarget as HTMLFormElement).reset();
             }}
-            className="mt-8 flex flex-col gap-3 sm:flex-row"
+            className="mt-12 flex flex-col gap-0 sm:flex-row"
           >
-            <Input type="email" required placeholder="your@email.com" className="h-12 bg-background" />
-            <Button type="submit" size="lg" className="h-12 px-8">
-              Get 10% off
+            <Input
+              type="email"
+              required
+              placeholder="Enter your email"
+              className="h-14 border-none bg-background text-foreground rounded-none px-6 focus-visible:ring-0"
+            />
+            <Button type="submit" size="lg" className="h-14 px-8 uppercase tracking-widest bg-foreground text-background hover:bg-foreground/90 rounded-none border-none">
+              Sign Up
             </Button>
           </form>
-          <p className="mt-3 text-xs text-muted-foreground">No spam, unsubscribe anytime.</p>
+          <p className="mt-6 text-[10px] uppercase tracking-[0.2em] text-primary-foreground/70">
+            By signing up, you agree to receive marketing emails.
+          </p>
         </div>
       </section>
-    </>
+    </div>
   );
 }

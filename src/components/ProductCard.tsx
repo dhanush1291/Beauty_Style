@@ -19,41 +19,24 @@ export function ProductCard({ product }: { product: Product }) {
   return (
     <>
       <div className="group relative">
-        <div className="relative aspect-square overflow-hidden rounded-lg bg-muted">
+        <div className="relative aspect-[3/4] overflow-hidden bg-muted">
           <Link to="/product/$id" params={{ id: product.id }} className="block h-full w-full">
             <img
               src={img1}
               alt={product.name}
               loading="lazy"
-              className="absolute inset-0 h-full w-full object-cover transition-opacity duration-500 group-hover:opacity-0"
+              className="absolute inset-0 h-full w-full object-cover transition-opacity duration-700 group-hover:opacity-0"
             />
             <img
               src={img2}
               alt=""
               loading="lazy"
               aria-hidden
-              className="absolute inset-0 h-full w-full scale-105 object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+              className="absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-700 group-hover:opacity-100"
             />
           </Link>
 
-          {/* Badges */}
-          <div className="absolute left-3 top-3 flex flex-col gap-1">
-            {product.badges?.map((b) => (
-              <span
-                key={b}
-                className={`rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${b === "SALE"
-                    ? "bg-primary text-primary-foreground"
-                    : b === "NEW"
-                      ? "bg-foreground text-background"
-                      : "bg-secondary text-secondary-foreground"
-                  }`}
-              >
-                {b}
-              </span>
-            ))}
-          </div>
-
-          {/* Wishlist */}
+          {/* Minimal Wishlist */}
           <button
             type="button"
             onClick={(e) => {
@@ -61,36 +44,39 @@ export function ProductCard({ product }: { product: Product }) {
               toggle(product.id);
             }}
             aria-label={isWish ? "Remove from wishlist" : "Add to wishlist"}
-            className="absolute right-3 top-3 grid h-9 w-9 place-items-center rounded-full bg-background/90 backdrop-blur transition hover:bg-background"
+            className="absolute right-2 top-2 grid h-8 w-8 place-items-center opacity-0 transition-opacity group-hover:opacity-100"
           >
             <Heart className={`h-4 w-4 ${isWish ? "fill-primary text-primary" : "text-foreground"}`} />
           </button>
 
-          {/* Quick view */}
-          <div className="absolute inset-x-3 bottom-3 translate-y-2 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+          {/* Clean Quick view */}
+          <div className="absolute inset-x-0 bottom-0 translate-y-full opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
             <Button
               variant="secondary"
-              className="w-full bg-background/95 backdrop-blur hover:bg-background"
+              className="w-full h-10 border-t bg-background/95 uppercase text-[10px] tracking-widest hover:bg-primary hover:text-primary-foreground transition-all rounded-none"
               onClick={() => setQuick(true)}
             >
-              Quick View
+              Shop Now
             </Button>
           </div>
         </div>
 
-        <div className="mt-3 space-y-1">
-          <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+        <div className="mt-4 flex flex-col items-center text-center px-1">
+          <p className="text-[9px] uppercase tracking-[0.2em] text-muted-foreground font-medium">
             {product.brand}
           </p>
-          <Link to="/product/$id" params={{ id: product.id }} className="block">
-            <h3 className="text-sm font-medium leading-snug hover:text-primary">{product.name}</h3>
+          <Link to="/product/$id" params={{ id: product.id }} className="block mt-1">
+            <h3 className="text-sm font-light tracking-tight hover:text-primary transition-colors">{product.name}</h3>
           </Link>
-          <Stars rating={product.rating} count={product.reviewCount} />
-          <div className="flex items-baseline gap-2 pt-0.5">
-            <span className="text-sm font-semibold">₹{product.price}</span>
+          <div className="flex items-baseline gap-2 mt-1">
+            <span className="text-sm font-medium">₹{product.price}</span>
             {onSale && (
-              <span className="text-xs text-muted-foreground line-through">₹{product.originalPrice}</span>
+              <span className="text-xs text-muted-foreground line-through opacity-60">₹{product.originalPrice}</span>
             )}
+          </div>
+          {/* Rating - very small and subtle */}
+          <div className="mt-1 opacity-60 scale-75">
+            <Stars rating={product.rating} count={product.reviewCount} />
           </div>
         </div>
       </div>
