@@ -1,7 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { ChevronRight, Sparkles, ShieldCheck, Truck } from "lucide-react";
-import { products } from "@/data/products";
 import { ProductCard } from "@/components/ProductCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -115,9 +114,21 @@ function CategoryTile({ category, sub, title, image }: { category: string; sub?:
   );
 }
 
+import { useProducts } from "@/hooks/useProducts";
+
 function Home() {
-  const trending = products.filter((p) => p.trending).slice(0, 8);
-  const newArrivals = products.filter((p) => p.newArrival);
+  const { products: allProducts, isLoading } = useProducts();
+
+  if (isLoading) {
+    return (
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+      </div>
+    );
+  }
+
+  const trending = allProducts.filter((p) => p.trending).slice(0, 8);
+  const newArrivals = allProducts.filter((p) => p.newArrival);
 
   return (
     <>

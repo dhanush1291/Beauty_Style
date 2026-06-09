@@ -2,7 +2,6 @@ import { createFileRoute, notFound } from "@tanstack/react-router";
 import { ShopListing } from "@/components/ShopListing";
 import {
   products,
-  DRESS_SUBCATEGORIES,
   COSMETIC_SUBCATEGORIES,
   subcategoryLabel,
 } from "@/data/products";
@@ -24,13 +23,15 @@ export const Route = createFileRoute("/shop/$category/$sub")({
 
 function SubPage() {
   const { category, sub } = Route.useParams();
-  if (category !== "dresses" && category !== "cosmetics") throw notFound();
-  const subs = category === "dresses" ? DRESS_SUBCATEGORIES : COSMETIC_SUBCATEGORIES;
+
+  if (category !== "cosmetics") throw notFound();
+
+  const subs = COSMETIC_SUBCATEGORIES;
   const found = subs.find((s) => s.slug === sub);
   if (!found) throw notFound();
 
   const source = products.filter((p) => p.category === category && p.subcategory === sub);
-  const catLabel = category === "dresses" ? "Dresses" : "Cosmetics";
+  const catLabel = "Cosmetics";
 
   return (
     <ShopListing

@@ -4,10 +4,19 @@ import {
     Plus, Pencil, Trash2, Save, X, Upload, Link as LinkIcon,
     Package, Image, RotateCcw, Search, Eye, EyeOff,
 } from "lucide-react";
-import { products, saveProducts, resetProducts, defaultProducts, COSMETIC_SUBCATEGORIES, type Product } from "@/data/products";
+import {
+    getProductsFromDb,
+    saveProductToDb,
+    deleteProductFromDb,
+    resetProductsInDb,
+    defaultProducts,
+    COSMETIC_SUBCATEGORIES,
+    type Product
+} from "@/data/products";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
 
 export const Route = createFileRoute("/admin")({
     component: AdminPage,
@@ -45,7 +54,9 @@ function emptyProduct(): Product {
 }
 
 function AdminPage() {
-    const [items, setItems] = useState<Product[]>([...products]);
+    const [items, setItems] = useState<Product[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [isSaving, setIsSaving] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const [filterSub, setFilterSub] = useState("all");
     const [editingProduct, setEditingProduct] = useState<Product | null>(null);
@@ -53,9 +64,19 @@ function AdminPage() {
     const [imageInput, setImageInput] = useState("");
     const fileRef = useRef<HTMLInputElement>(null);
 
-    // Refresh items from products array on mount
+    // Fetch from Firebase on mount
     useEffect(() => {
-        setItems([...products]);
+        async function load() {
+            try {
+                const fetched = await getProductsFromDb();
+                setItems(fetched);
+            } catch (error) {
+                toast.error("Failed to load products.");
+            } finally {
+                setIsLoading(false);
+            }
+        }
+        load();
     }, []);
 
     const filtered = items.filter((p) => {
@@ -66,33 +87,56 @@ function AdminPage() {
         return matchesSearch && matchesSub;
     });
 
-    function handleSave(updated: Product) {
-        let newItems: Product[];
-        if (isNew) {
-            newItems = [...items, updated];
-        } else {
-            newItems = items.map((p) => (p.id === updated.id ? updated : p));
+    async function handleSave(updated: Product) {
+        setIsSaving(true);
+        try {
+            await saveProductToDb(updated);
+
+            let newItems: Product[];
+            if (isNew) {
+                newItems = [...items, updated];
+            } else {
+                newItems = items.map((p) => (p.id === updated.id ? updated : p));
+            }
+            setItems(newItems);
+            setEditingProduct(null);
+            setIsNew(false);
+            toast.success(isNew ? "Product added to Firebase!" : "Product updated in Firebase!");
+        } catch (error) {
+            toast.error("Failed to save product.");
+        } finally {
+            setIsSaving(false);
         }
-        setItems(newItems);
-        saveProducts(newItems);
-        setEditingProduct(null);
-        setIsNew(false);
-        toast.success(isNew ? "Product added!" : "Product updated!");
     }
 
-    function handleDelete(id: string) {
-        const newItems = items.filter((p) => p.id !== id);
-        setItems(newItems);
-        saveProducts(newItems);
-        toast.success("Product deleted.");
+    async function handleDelete(id: string) {
+        if (!confirm("Are you sure you want to delete this product?")) return;
+
+        try {
+            await deleteProductFromDb(id);
+            const newItems = items.filter((p) => p.id !== id);
+            setItems(newItems);
+            toast.success("Product deleted from Firebase.");
+        } catch (error) {
+            toast.error("Failed to delete product.");
+        }
     }
 
-    function handleReset() {
-        resetProducts();
-        setItems([...defaultProducts]);
-        setEditingProduct(null);
-        setIsNew(false);
-        toast.success("Products reset to defaults.");
+    async function handleReset() {
+        if (!confirm("This will reset ALL products to defaults in Firebase. Continue?")) return;
+
+        setIsLoading(true);
+        try {
+            await resetProductsInDb();
+            setItems([...defaultProducts]);
+            setEditingProduct(null);
+            setIsNew(false);
+            toast.success("Products reset to defaults in Firebase.");
+        } catch (error) {
+            toast.error("Failed to reset products.");
+        } finally {
+            setIsLoading(false);
+        }
     }
 
     function handleAddNew() {
@@ -143,7 +187,7 @@ function AdminPage() {
                             <p className="text-xs font-semibold uppercase tracking-[0.25em] text-primary">Admin Panel</p>
                             <h1 className="mt-2 font-serif text-4xl md:text-5xl">Product Manager</h1>
                             <p className="mt-2 text-sm text-muted-foreground">
-                                Add, edit, or remove cosmetics products. Changes are saved locally.
+                                Add, edit, or remove cosmetics products. Changes are saved to Firebase.
                             </p>
                         </div>
                         <div className="flex gap-2">
@@ -198,7 +242,12 @@ function AdminPage() {
                 </div>
 
                 {/* Product List */}
-                {filtered.length === 0 ? (
+                {isLoading ? (
+                    <div className="flex flex-col items-center justify-center rounded-xl border border-dashed p-16 text-center">
+                        <Loader2 className="h-10 w-10 animate-spin text-primary/40" />
+                        <p className="mt-4 text-muted-foreground">Syncing with Firebase...</p>
+                    </div>
+                ) : filtered.length === 0 ? (
                     <div className="rounded-xl border border-dashed p-16 text-center">
                         <Package className="mx-auto h-12 w-12 text-muted-foreground/40" />
                         <p className="mt-4 text-muted-foreground">No products found.</p>
@@ -506,6 +555,7 @@ function AdminPage() {
                                     Cancel
                                 </Button>
                                 <Button
+                                    disabled={isSaving}
                                     onClick={() => {
                                         if (!editingProduct.name.trim()) return toast.error("Product name is required.");
                                         if (!editingProduct.brand.trim()) return toast.error("Brand is required.");
@@ -520,7 +570,8 @@ function AdminPage() {
                                     }}
                                     className="gap-2"
                                 >
-                                    <Save className="h-4 w-4" /> {isNew ? "Add Product" : "Save Changes"}
+                                    {isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+                                    {isNew ? "Add Product" : "Save Changes"}
                                 </Button>
                             </div>
                         </div>

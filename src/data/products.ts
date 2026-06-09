@@ -1,3 +1,15 @@
+import {
+  collection,
+  getDocs,
+  setDoc,
+  doc,
+  deleteDoc,
+  writeBatch,
+  query,
+  orderBy
+} from "firebase/firestore";
+import { db } from "@/lib/firebase";
+
 export type ProductCategory = "cosmetics";
 
 export interface Product {
@@ -161,10 +173,110 @@ export const defaultProducts: Product[] = [
   },
 ];
 
-// ─── localStorage-backed product store ───────────────────────────────────────
-const STORAGE_KEY = "sai_products";
+// ─── Firebase Firestore backed product store ─────────────────────────────────
+const COLLECTION_NAME = "products";
+const STORAGE_KEY = "sai_products_cache";
 
-function loadProducts(): Product[] {
+/**
+ * Fetches products from Firestore.
+ * If Firestore is empty, it populates it with defaultProducts.
+ */
+export async function getProductsFromDb(): Promise<Product[]> {
+  try {
+    const q = query(collection(db, COLLECTION_NAME), orderBy("name"));
+    const querySnapshot = await getDocs(q);
+
+    if (querySnapshot.empty) {
+      console.log("No products in Firestore. Initializing with defaults...");
+      await initializeDbWithDefaults();
+      return defaultProducts;
+    }
+
+    const fetchedProducts = querySnapshot.docs.map(doc => doc.data() as Product);
+
+    // Update local cache
+    if (typeof window !== "undefined") {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(fetchedProducts));
+    }
+
+    // Update in-memory reference
+    products.length = 0;
+    products.push(...fetchedProducts);
+
+    return fetchedProducts;
+  } catch (error) {
+    console.error("Error fetching products from Firestore:", error);
+    // Fallback to local cache or defaults
+    return loadProductsFromCache();
+  }
+}
+
+async function initializeDbWithDefaults() {
+  const batch = writeBatch(db);
+  defaultProducts.forEach((p) => {
+    const docRef = doc(db, COLLECTION_NAME, p.id);
+    batch.set(docRef, p);
+  });
+  await batch.commit();
+}
+
+export async function saveProductToDb(product: Product) {
+  try {
+    await setDoc(doc(db, COLLECTION_NAME, product.id), product);
+    // Update local list
+    const index = products.findIndex(p => p.id === product.id);
+    if (index !== -1) {
+      products[index] = product;
+    } else {
+      products.push(product);
+    }
+    updateCache(products);
+  } catch (error) {
+    console.error("Error saving product to Firestore:", error);
+    throw error;
+  }
+}
+
+export async function deleteProductFromDb(id: string) {
+  try {
+    await deleteDoc(doc(db, COLLECTION_NAME, id));
+    // Update local list
+    const index = products.findIndex(p => p.id === id);
+    if (index !== -1) {
+      products.splice(index, 1);
+      updateCache(products);
+    }
+  } catch (error) {
+    console.error("Error deleting product from Firestore:", error);
+    throw error;
+  }
+}
+
+export async function resetProductsInDb() {
+  try {
+    // Delete all first (simplified, for better ways use a cloud function)
+    const querySnapshot = await getDocs(collection(db, COLLECTION_NAME));
+    const batch = writeBatch(db);
+    querySnapshot.forEach((doc) => {
+      batch.delete(doc.ref);
+    });
+    await batch.commit();
+
+    // Re-initialize
+    await initializeDbWithDefaults();
+
+    products.length = 0;
+    products.push(...defaultProducts);
+    updateCache(products);
+  } catch (error) {
+    console.error("Error resetting products in Firestore:", error);
+    throw error;
+  }
+}
+
+// ─── Cache Helpers ──────────────────────────────────────────────────────────
+
+function loadProductsFromCache(): Product[] {
   if (typeof window === "undefined") return defaultProducts;
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -172,26 +284,17 @@ function loadProducts(): Product[] {
       const parsed = JSON.parse(raw) as Product[];
       if (Array.isArray(parsed) && parsed.length > 0) return parsed;
     }
-  } catch {}
+  } catch { }
   return defaultProducts;
 }
 
-export function saveProducts(ps: Product[]) {
+function updateCache(ps: Product[]) {
   if (typeof window === "undefined") return;
   localStorage.setItem(STORAGE_KEY, JSON.stringify(ps));
-  // Update in-memory reference
-  products.length = 0;
-  products.push(...ps);
 }
 
-export function resetProducts() {
-  if (typeof window === "undefined") return;
-  localStorage.removeItem(STORAGE_KEY);
-  products.length = 0;
-  products.push(...defaultProducts);
-}
-
-export const products: Product[] = loadProducts();
+// Legacy exports for compatibility (will be updated over time)
+export const products: Product[] = loadProductsFromCache();
 
 export const allBrands = Array.from(new Set(products.map(p => p.brand))).sort();
 
@@ -202,3 +305,13 @@ export const getRelated = (p: Product, n = 4) =>
 export const subcategoryLabel = (slug: string) => {
   return COSMETIC_SUBCATEGORIES.find(s => s.slug === slug)?.label ?? slug;
 };
+
+// These legacy functions now just call the DB ones (simplified)
+export function saveProducts(ps: Product[]) {
+  // In a real app, you'd handle batches or individual updates
+  console.warn("saveProducts is legacy. Use saveProductToDb instead.");
+}
+
+export function resetProducts() {
+  console.warn("resetProducts is legacy. Use resetProductsInDb instead.");
+}

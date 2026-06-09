@@ -9,6 +9,7 @@ import { useWishlist, useMounted } from "@/lib/wishlist";
 import { AffiliateRedirect } from "@/components/AffiliateRedirect";
 import { ProductCard } from "@/components/ProductCard";
 import { toast } from "sonner";
+import { useProducts } from "@/hooks/useProducts";
 
 export const Route = createFileRoute("/product/$id")({
   component: ProductPage,
@@ -33,17 +34,33 @@ export const Route = createFileRoute("/product/$id")({
   ),
 });
 
+
 function ProductPage() {
   const { id } = Route.useParams();
-  const product = getProduct(id);
-  if (!product) throw notFound();
+  const { products: allProducts, isLoading } = useProducts();
 
   const [activeImg, setActiveImg] = useState(0);
-  const [color, setColor] = useState<string | undefined>(product.colors?.[0]);
-  const [size, setSize] = useState<string | undefined>(product.sizes?.[0]);
+  const [color, setColor] = useState<string | undefined>(undefined);
+  const [size, setSize] = useState<string | undefined>(undefined);
   const [redirect, setRedirect] = useState(false);
   const { has, toggle } = useWishlist();
   const mounted = useMounted();
+
+  if (isLoading) {
+    return (
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+      </div>
+    );
+  }
+
+  const product = allProducts.find(p => p.id === id);
+  if (!product) throw notFound();
+
+  // Initialize state once product is loaded
+  if (color === undefined && product.colors?.[0]) setColor(product.colors[0]);
+  if (size === undefined && product.sizes?.[0]) setSize(product.sizes[0]);
+
   const isWish = mounted && has(product.id);
   const related = getRelated(product, 4);
 

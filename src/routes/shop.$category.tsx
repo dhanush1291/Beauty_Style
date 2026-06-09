@@ -24,23 +24,34 @@ export const Route = createFileRoute("/shop/$category")({
   },
 });
 
+import { useProducts } from "@/hooks/useProducts";
+
 function CategoryPage() {
   const { category } = Route.useParams();
+  const { products: allProducts, isLoading } = useProducts();
+
+  if (isLoading) {
+    return (
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+      </div>
+    );
+  }
 
   let title = "";
-  let source = products;
+  let source = allProducts;
   switch (category) {
     case "cosmetics":
       title = "Cosmetics";
-      source = products.filter((p) => p.category === "cosmetics");
+      source = allProducts.filter((p) => p.category === "cosmetics");
       break;
     case "new":
       title = "New Arrivals";
-      source = products.filter((p) => p.newArrival);
+      source = allProducts.filter((p) => p.newArrival);
       break;
     case "sale":
       title = "Sale";
-      source = products.filter((p) => !!p.originalPrice);
+      source = allProducts.filter((p) => !!p.originalPrice);
       break;
     default:
       throw notFound();
